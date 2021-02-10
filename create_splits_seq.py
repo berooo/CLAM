@@ -11,12 +11,13 @@ parser.add_argument('--seed', type=int, default=1,
                     help='random seed (default: 1)')
 parser.add_argument('--k', type=int, default=10,
                     help='number of splits (default: 10)')
-parser.add_argument('--task', type=str, choices=['camelyon_40x_cv', 'tcga_kidney_cv'])
+parser.add_argument('--task', type=str, choices=['camelyon_40x_cv', 'tcga_kidney_cv'],default='camelyon_40x_cv')
 
 args = parser.parse_args()
 
-if args.task == 'tcga_kidney':
-    dataset = Generic_WSI_Classification_Dataset(csv_path = 'dataset_csv/tcga_kidney_clean.csv',
+if args.task == 'tcga_kidney_cv':
+
+    dataset = Generic_WSI_Classification_Dataset(csv_path = 'dataset_csv/tcga_kidney.csv',
                             shuffle = False, 
                             seed = args.seed, 
                             print_info = True,
@@ -31,7 +32,7 @@ if args.task == 'tcga_kidney':
 
 
 elif args.task == 'camelyon_40x_cv':
-    dataset = Generic_WSI_Classification_Dataset(csv_path = 'dataset_csv/camelyon_clean.csv',
+    dataset = Generic_WSI_Classification_Dataset(csv_path = 'dataset_csv/camelyon_clean16.csv',
                             shuffle = False, 
                             seed = args.seed, 
                             print_info = True,

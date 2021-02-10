@@ -66,13 +66,13 @@ def main(args):
 
 # Generic training settings
 parser = argparse.ArgumentParser(description='Configurations for WSI Training')
-parser.add_argument('--data_root_dir', type=str, default=None, 
+parser.add_argument('--data_root_dir', type=str, default='/data/shibaorong/data/kidney/results/train_features',
                     help='data directory')
 parser.add_argument('--max_epochs', type=int, default=200,
                     help='maximum number of epochs to train (default: 200)')
-parser.add_argument('--lr', type=float, default=1e-4,
+parser.add_argument('--lr', type=float, default=2e-4,
                     help='learning rate (default: 0.0001)')
-parser.add_argument('--label_frac', type=float, default=1.0,
+parser.add_argument('--label_frac', type=float, default=0.75,
                     help='fraction of training labels (default: 1.0)')
 parser.add_argument('--reg', type=float, default=1e-5,
                     help='weight decay (default: 1e-5)')
@@ -94,16 +94,16 @@ parser.add_argument('--bag_loss', type=str, choices=['svm', 'ce'], default='ce',
                      help='slide-level classification loss function (default: ce)')
 parser.add_argument('--model_type', type=str, choices=['clam_sb', 'clam_mb', 'mil'], default='clam_sb', 
                     help='type of model (default: clam_sb, clam w/ single attention branch)')
-parser.add_argument('--exp_code', type=str, help='experiment code for saving results')
+parser.add_argument('--exp_code', type=str, default='tcga_kidney_cv_CLAM_75',help='experiment code for saving results')
 parser.add_argument('--weighted_sample', action='store_true', default=False, help='enable weighted sampling')
 parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='small', help='size of model, does not affect mil')
-parser.add_argument('--task', type=str, choices=['camelyon_40x_cv',  'tcga_kidney_cv'])
+parser.add_argument('--task', type=str, choices=['camelyon_40x_cv',  'tcga_kidney_cv'],default='tcga_kidney_cv')
 ### CLAM specific options
 parser.add_argument('--no_inst_cluster', action='store_true', default=False,
                      help='disable instance-level clustering')
-parser.add_argument('--inst_loss', type=str, choices=['svm', 'ce', None], default=None,
+parser.add_argument('--inst_loss', type=str, choices=['svm', 'ce', None], default='svm',
                      help='instance-level clustering loss function (default: None)')
-parser.add_argument('--subtyping', action='store_true', default=False, 
+parser.add_argument('--subtyping', action='store_true', default=True,
                      help='subtyping problem')
 parser.add_argument('--bag_weight', type=float, default=0.7,
                     help='clam: weight coefficient for bag-level loss (default: 0.7)')
@@ -152,10 +152,10 @@ if args.model_type in ['clam_sb', 'clam_mb']:
 print('\nLoad Dataset')
 if args.task == 'camelyon_40x_cv':
     args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/camelyon_clean.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'camelyon_feat_resnet'),
-                            shuffle = False, 
-                            seed = args.seed, 
+    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/camelyon_clean16.csv',
+                            data_dir= args.data_root_dir,
+                            shuffle = False,
+                            seed = args.seed,
                             print_info = True,
                             label_dict = {'normal_tissue':0, 'tumor_tissue':1},
                             patient_strat=False,
@@ -163,8 +163,8 @@ if args.task == 'camelyon_40x_cv':
 
 elif args.task == 'tcga_kidney_cv':
     args.n_classes=3
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/tcga_kidney_clean.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'tcga_kidney_resnet_features'),
+    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/tcga_kidney.csv',
+                            data_dir= os.path.join(args.data_root_dir),
                             shuffle = False, 
                             seed = args.seed, 
                             print_info = True,

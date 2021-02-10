@@ -109,6 +109,7 @@ class Generic_WSI_Classification_Dataset(Dataset):
 		mask = data['label'].isin(ignore)
 		data = data[~mask]
 		data.reset_index(drop=True, inplace=True)
+		print(label_dict.keys())
 		for i in data.index:
 			key = data.loc[i, 'label']
 			data.at[i, 'label'] = label_dict[key]
