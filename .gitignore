@@ -1,3 +1,9 @@
 *.pt
 **/.DS_Store
 __pycache__/
+dataset_csv/
+docs/
+presets/
+results/
+splits/
+test/
